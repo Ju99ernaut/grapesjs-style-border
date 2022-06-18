@@ -26,40 +26,37 @@ export default (editor, opts = {}) => {
   const wSelector = `.${pfx}sm-property`; //.${pfx}sm-property__border-width`;
   let typeProps;
 
-  const typeRadio = sm.getType('radio');
-  const propModel = typeRadio.model;
-
-  sm.addType('empty-radio', {
-    model: propModel.extend({
-      getStyle(opts = {}) {
-        return '';
-      },
-    }),
-    view: typeRadio.view
-  })
-
   const borderType = {
     property: 'border-type',
-    type: 'empty-radio',
-    default: 'all',
-    options: [
-      { value: 'all' },
-      { value: 'left' },
-      { value: 'right' },
-      { value: 'top' },
-      { value: 'bottom' },
-    ],
-    onChange({ property, to }) {
-      const { value } = to;
-      if (value) {
-        borderProps.forEach((borderProp) => {
-          const ext = value === 'all' ? '' : `-${value}`;
-          const { $el } = borderProp.view;
-          $el.show();
-          if (borderProp.get('property') !== `border${ext}`) $el.hide();
-          else typeProps.view.$el.insertBefore($el.find(wSelector).first());
-        });
-      }
+    type: 'composite',
+    properties: [{
+      property: 'border-options',
+      type: 'radio',
+      name: ' ',
+      default: 'all',
+      options: [
+        { value: 'all', title: 'all', className: 'fa fa-arrows' },
+        { value: 'top', title: 'top', className: 'fa fa-long-arrow-up' },
+        { value: 'right', title: 'right', className: 'fa fa-long-arrow-right' },
+        { value: 'bottom', title: 'bottom', className: 'fa fa-long-arrow-down' },
+        { value: 'left', title: 'left', className: 'fa fa-long-arrow-left' },
+      ],
+      onChange({ property, to }) {
+        const { value } = to;
+        if (value !== undefined && value !== null) {
+          borderProps.forEach((borderProp) => {
+            const ext = !value || value === 'all' ? '' : `-${value}`;
+            const { $el } = borderProp.view;
+            $el.show();
+            if (borderProp.get('property') !== `border${ext}`) $el.hide();
+            else typeProps.view.$el.insertBefore($el.find(wSelector).first());
+          });
+        }
+      },
+      ...options.extendType
+    }],
+    toStyle(values, { name }) {
+      return {};
     },
     ...options.extendType
   }
