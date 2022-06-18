@@ -2,7 +2,11 @@
 
 Separate border property to `border`, `border-left`, `border-top`, `border-bottom`, `border-right`
 
-[DEMO](##)
+Sponsered by:
+
+[![templateto.com](https://cdn.dorik.com/605a2d8f4235520011809929/61d819e8cb11310011d0bb96/images/logo-wide_dark_bg-white_trimmed_lg-txt_l9gbqgx8.png)](https://templateto.com)
+
+[DEMO](https://musical-dolphin-748caa.netlify.app/)
 
 ### HTML
 ```html
