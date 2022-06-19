@@ -26,6 +26,23 @@ export default (editor, opts = {}) => {
   const wSelector = `.${pfx}sm-property`; //.${pfx}sm-property__border-width`;
   let typeProps;
 
+  const switchBorder = (ext = '') => {
+    borderProps.forEach((borderProp) => {
+      const { $el } = borderProp.view;
+      $el.show();
+      if (borderProp.get('property') === `border${ext}`) {
+        typeProps.view.$el.insertBefore($el.find(wSelector).first());
+      } else {
+        $el.hide();
+      }
+    });
+    borderProps.forEach((borderProp) => {
+      if (borderProp.get('property') !== `border${ext}`)
+        borderProp.set('requires', { display: 'invisible' });
+      else borderProp.set('requires', null);
+    });
+  }
+
   const borderType = {
     property: 'border-type',
     type: 'composite',
@@ -44,13 +61,8 @@ export default (editor, opts = {}) => {
       onChange({ property, to }) {
         const { value } = to;
         if (value !== undefined && value !== null) {
-          borderProps.forEach((borderProp) => {
-            const ext = !value || value === 'all' ? '' : `-${value}`;
-            const { $el } = borderProp.view;
-            $el.show();
-            if (borderProp.get('property') !== `border${ext}`) $el.hide();
-            else typeProps.view.$el.insertBefore($el.find(wSelector).first());
-          });
+          const ext = !value || value === 'all' ? '' : `-${value}`;
+          switchBorder(ext);
         }
       },
       ...options.extendType
@@ -140,10 +152,6 @@ export default (editor, opts = {}) => {
       borderProps.push(sm.addProperty(sector, border, at ? { at } : {}));
     });
 
-    borderProps.forEach((borderProp) => {
-      const { $el } = borderProp.view;
-      if (borderProp.get('property') !== 'border') $el.hide();
-      else typeProps.view.$el.insertBefore($el.find(wSelector).first());
-    });
+    switchBorder();
   });
 };
