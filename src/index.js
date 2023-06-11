@@ -28,12 +28,14 @@ export default (editor, opts = {}) => {
 
   const switchBorder = (ext = '') => {
     borderProps.forEach((borderProp) => {
-      const { $el } = borderProp.view;
-      $el.show();
-      if (borderProp.get('property') === `border${ext}`) {
-        typeProps.view.$el.insertBefore($el.find(wSelector).first());
-      } else {
-        $el.hide();
+      const { $el } = borderProp.view || {};
+      if($el){
+        $el.show();
+        if (borderProp.get('property') === `border${ext}`) {
+          typeProps.view.$el.insertBefore($el.find(wSelector).first());
+        } else {
+          $el.hide();
+        }
       }
     });
     borderProps.forEach((borderProp) => {
